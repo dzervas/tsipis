@@ -4,7 +4,7 @@
     "ova_checksum_type": "sha256",
     "ova_url": "https://images.offensive-security.com/virtual-images/kali-linux-2020.1-vbox-amd64.ova",
 
-    "box_name": "Kali-Linux-2020.1-vbox-amd64",
+    "box_name": "kali-2020.1",
     "box_desc": "Kali Linux 2020.1 64-Bit",
     "box_family": "kali-linux",
 
@@ -24,34 +24,38 @@
       "checksum_type": "{{user `ova_checksum_type`}}",
 
       "ssh_wait_timeout": "30s",
-      "ssh_username": "root",
-      "ssh_password": "toor",
+      "ssh_username": "kali",
+      "ssh_password": "kali",
 
       "import_flags": [
           "--vsys", "0",
           "--eula", "accept"
       ],
-      "shutdown_command": "echo 'packer' | shutdown -P now"
+
+      "shutdown_command": "echo 'kali' | sudo -S shutdown -P now",
+      "boot_wait": "2s",
+      "boot_command": [
+          "<esc><wait>e<wait><down><down><down><down><wait>",
+          "<down><down><down><down><down><down><down><down><down><down><wait>",
+          "<leftCtrlOn>e<leftCtrlOff> systemd.unit=multi-user.target<wait>",
+          "<leftCtrlOn>x<leftCtrlOff><wait10>",
+          "kali<enter><wait>kali<enter><wait2>",
+          "echo 'kali' | sudo -S systemctl start ssh<wait><enter>"
+      ]
     }
   ],
 
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["sudo apt-get update && sudo apt-get -y upgrade"]
+      "inline": ["echo 'kali' | sudo -S apt-get update && echo 'kali' | sudo -S apt-get -y upgrade"]
     }
   ],
 
   "post-processors": [
-    { "type": "checksum" },
     {
-      "type": "googlecompute-import",
-      "project_id": "tsipis",
-      "account_file": "{{user `home`}}/.tsipis/google.json",
-      "bucket": "{{user `google_bucket_images`}}",
-      "image_name": "{{user `box_name`}}",
-      "image_description": "{{user `box_desc`}}",
-      "image_family": "{{user `box_family`}}"
+        "type": "compress",
+        "output": "packer_output/{{user `box_name`}}.tar.gz"
     }
   ]
 }

@@ -35,8 +35,9 @@ You will need to install `terraform` (> 0.12).
 ## Building the images with packer
 
 You will need `jq`, `packer` & `virtualbox`.
+
 VirtualBox also needs 'Oracle VM VirtualBox Extension Pack'.
-On Arch Linux install it with `pacman -S virtualbox-ext-vnc`
+To install it execute `scripts/virtualbox-ext.sh` (take a look, it's not scary)
 
 Initialize image storage to build images with packer:
 

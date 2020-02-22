@@ -3,3 +3,4 @@ packer_cache
 .terraform
 *.tfstate
 *.tfstate.backup
+packer_output
