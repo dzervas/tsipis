@@ -6,7 +6,9 @@
 
     "box_name" : "Kali-Linux-2020.1-vbox-amd64",
     "box_desc" : "Kali Linux 2020.1 64-Bit",
-    "box_family" : "kali-linux"
+    "box_family" : "kali-linux",
+
+    "google_bucket" : ""
   },
   "description": "{{user `box_desc`}}",
 
@@ -43,6 +45,7 @@
       "type": "googlecompute-import",
       "project_id": "tsipis",
       "account_file": "~/.tsipis/google_account.json",
+      "bucket": "{{user `google_bucket`}}",
       "image_name": "{{user `box_name`}}",
       "image_description": "{{user `box_desc`}}",
       "image_family": "{{use `box_family`}}"
