@@ -26,6 +26,9 @@ Pick a project name. Stick with it across all providers.
 - Google
   - Create a project
   - Create a [Service Account](https://console.cloud.google.com/apis/credentials/serviceaccountkey) "Project/Owner" and save to `~/.tsipis/google.json`
+  - Go to [API Library](https://console.developers.google.com/apis/dashboard) and enable:
+    - [Compute Engine API](https://console.developers.google.com/apis/api/compute.googleapis.com)
+  - (Optional) Create a budget in Billing/Budgets & alerts
 
 ## Using
 
@@ -46,16 +49,6 @@ cd terraform
 terraform init
 # You will get errors with the next command, it's fine
 # Terraform tries to create machines with non-existent images
-terraform plan -out /tmp/tfplan
-# If you're happy
-terraform apply /tmp/tfplan
-terraform output -json | jq "with_entries(.value = .value.value)" > ~/.tsipis/packer.json
-
-# Actually build the images
-cd ../packer
-packer -var-file ~/.tsipis/packer.json kali/kali.json
-
-cd ../terraform
 terraform plan -out /tmp/tfplan
 # If you're happy
 terraform apply /tmp/tfplan

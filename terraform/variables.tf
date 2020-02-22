@@ -1,19 +1,23 @@
-# Global Variables
-variable "project" {
-	type         = string
-	description  = "Project name"
-	default      = "tsipis"
+variable "config" {
+	type = map
+	description = "Providers config"
+	default = {
+		# Global
+		project = "tsipis"
+		domain = "example.com"
+
+		# Google
+		google_region = "us-central1"
+		google_zone = "us-central1-c"
+	}
 }
 
-# Google-specific
-variable "google_region" {
-	type         = string
-	description  = "Datacenter Region - Always Free is only available in us-east1, us-west1, and us-central1"
-	default      = "us-central1"
-}
-
-variable "google_zone" {
-	type         = string
-	description  = "Datacenter Zone - Must be inside Region"
-	default      = "us-central1-c"
+variable "ssh_keys" {
+	type = map
+	description = "SSH keys to use on machines"
+	# Example:
+	# {
+	# user: file("~/.ssh/id_rsa.pub")
+	# user2: "thisisansshkey"
+	# }
 }

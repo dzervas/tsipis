@@ -1,5 +1,6 @@
 provider "google" {
 	credentials = file("~/.tsipis/google.json")
-	project     = var.project
-	region      = var.google_region
+	project = var.config.project
+	region = var.config.google_region
+	zone = var.config.google_zone
 }
