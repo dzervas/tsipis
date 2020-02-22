@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "ova_checksum": "1f1f480c10305c8bb72516fa7060303311e18a29009a57689780a45a7e22880a",
+    "ova_checksum_type": "sha256",
+    "ova_url": "https://images.offensive-security.com/virtual-images/kali-linux-2020.1-vbox-amd64.ova",
+
+    "box_name" : "Kali-Linux-2020.1-vbox-amd64",
+    "box_desc" : "Kali Linux 2020.1 64-Bit",
+    "box_family" : "kali-linux"
+  },
+  "description": "{{user `box_desc`}}",
+
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+      "vm_name": "{{user `vm_name`}}",
+      "source_path": "{{user `ova_url`}}",
+      "guest_additions_mode": "disable",
+      "checksum": "{{user `ova_checksum`}}",
+      "checksum_type": "{{user `ova_checksum_type`}}",
+      "ssh_wait_timeout": "30s",
+      "http_directory": "http",
+      "ssh_username": "root",
+      "ssh_password": "toor",
+      "import_flags": [
+          "--vsys", "0",
+          "--eula", "accept"
+      ],
+      "shutdown_command": "echo 'packer' | shutdown -P now"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["sudo apt-get update && sudo apt-get -y upgrade"]
+    }
+  ],
+
+  "post-processors": [
+    { "type": "checksum" },
+    {
+      "type": "googlecompute-import",
+      "project_id": "tsipis",
+      "account_file": "~/.tsipis/google_account.json",
+      "image_name": "{{user `box_name`}}",
+      "image_description": "{{user `box_desc`}}",
+      "image_family": "{{use `box_family`}}"
+    }
+  ]
+}
