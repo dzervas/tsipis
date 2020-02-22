@@ -1,6 +1,27 @@
 # Tsipis
 
+Loosely translated to "cheap fuck" from Greek, Tsipis is there to aid you
+have a pentest cloud infrastructure for free. It uses the free resources that
+cloud providers give you. The cost is the amount of time you need to spend
+to sign up on each one of them and create a terraform account with proper
+rights. Everything is thoroughly documented.
+
+You WILL need:
+ - Valid Credit Card (won't be charged though)
+ - Phone number (I'd say don't spend your time with "online free" numbers)
+ - E-Mail
+
+Using a VPN to register on various provider might cause problems (additional
+verification steps/bans/global warming).
+
+I try to use the "free forever" resources first, not the "12-month free" or
+"trial", but that's not always feasible (you cheap fuck...).
+
+Idea came from https://free-for.dev
+
 ## Gathering Credentials
+
+Pick a project name. Stick with it across all providers.
 
 - Google
   - Create a project
