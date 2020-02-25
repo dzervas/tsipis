@@ -1,0 +1,79 @@
+---
+# Took from https://github.com/leesoh/yams/blob/master/roles/metasploit/tasks/metasploit.yml
+
+- name: Install PostgreSQL & dependencies
+  package:
+    name:
+      - autoconf
+      - build-essential
+      - git
+      - libjemalloc-dev
+      - libpcap-dev
+      - libpq-dev
+      - libsqlite3-dev
+      - nmap
+      - postgresql
+      - postgresql-client
+      - python3-psycopg2
+      - ruby-dev
+      - zlib1g-dev
+    state: latest
+  become: yes
+
+- name: Create Metasploit user
+  user:
+    name: msf
+    comment: Metasploit user by Ansible
+    create_home: true
+  become: yes
+
+- name: Clone Metasploit
+  git:
+    repo: https://github.com/rapid7/metasploit-framework
+    dest: ~msf/metasploit-framework
+    clone: yes
+    update: yes
+    depth: 1
+  become: yes
+  become_user: msf
+
+- name: Install bundler Gem
+  gem:
+    name: bundler
+    state: latest
+  become: yes
+  become_user: msf
+
+- name: Install Ruby Gems
+  bundler:
+    chdir: ~msf/metasploit-framework
+    state: latest
+    executable: ~/.gem/ruby/2.5.0/bin/bundler
+  become: yes
+  become_user: msf
+
+- name: Create Metasploit PostgreSQL DB
+  vars:
+    ansible_ssh_pipelining: true
+  postgresql_db:
+    name: msf
+  become: yes
+  become_user: postgres
+
+- name: Create Metasploit PostgreSQL user
+  vars:
+    ansible_ssh_pipelining: true
+  postgresql_user:
+    db: msf
+    name: msf
+    password: msf
+    priv: ALL
+  become: yes
+  become_user: postgres
+
+- name: Start & Enable PostgreSQL server
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes
+  become: yes

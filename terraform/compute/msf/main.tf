@@ -14,6 +14,7 @@ resource "google_compute_instance" "msf" {
 
 	boot_disk {
 		initialize_params {
+			# This is the okayest image with shield support
 			image = "gce-uefi-images/ubuntu-1804-lts"
 			# Google Free is up to 30GB. We better use them all.
 			size = 30

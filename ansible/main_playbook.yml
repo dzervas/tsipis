@@ -1,0 +1,7 @@
+---
+
+- hosts: msf
+  roles:
+    - role: setup
+      tags:
+        - msf

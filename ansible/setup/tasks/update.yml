@@ -1,0 +1,10 @@
+---
+
+- name: Update & Upgrade apt
+  apt:
+    autoclean: true
+    autoremove: true
+    update_cache: true
+    upgrade: yes
+  become: yes
+  become_method: sudo
