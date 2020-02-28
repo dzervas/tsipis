@@ -1,22 +1,39 @@
 ---
 # Took from https://github.com/leesoh/yams/blob/master/roles/metasploit/tasks/metasploit.yml
 
+- name: Parse Postgres URL
+  local_action:
+    module: command
+    cmd: "python {{ role_path }}/files/pgurl2json.py"
+    stdin: "{{ postgres_url }}"
+  register: postgres_url_json
+
+- name: Parse Postgres JSON data
+  set_fact:
+    database: "{{ postgres_url_json.stdout | from_json }}"
+    cachable: no
+
+- name: Gather package facts
+  package_facts:
+
 - name: Download Metasploit installer
-  become: true
+  become: yes
   get_url:
     url: https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb
     dest: /tmp/msfinstall
-    mode: 0755
+    mode: 755
+  # Script adds repo and adds the metasploit-framework package
+  when: "'metasploit-framework' not in ansible_facts.packages"
 
 - name: Install Metasploit
-  become: true
+  become: yes
   command: /tmp/msfinstall
+  when: "'metasploit-framework' not in ansible_facts.packages"
 
 - name: Create Metasploit user
   become: yes
   user:
-    name: msf
-    group: msf
+    name: metasploit
     comment: Metasploit user by Ansible
     create_home: true
 
@@ -30,9 +47,9 @@
   become: true
   file:
     path: /var/log/metasploit-web
-    owner: msf
-    group: msf
-    mode: 755
+    owner: metasploit
+    mode: 700
+    state: directory
 
 - name: Install SystemD service
   become: true
@@ -43,6 +60,6 @@
 - name: Start Metasploit
   become: true
   systemd:
-    state: started
+    state: restarted
     daemon_reload: yes
     name: metasploit-web

@@ -1,10 +1,10 @@
 development: &pgsql
   adapter: postgresql
-  database: {{ db_name }}
-  username: {{ db_username }}
-  password: {{ db_password }}
-  host: {{ db_host }}
-  port: {{ db_port }}
+  database: {{ database.database }}
+  username: {{ database.username }}
+  password: {{ database.password }}
+  host: {{ database.host }}
+  port: {{ database.port }}
   pool: 200
   timeout: 5
 

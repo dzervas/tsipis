@@ -1,6 +1,11 @@
 ---
 - hosts: all
   tasks:
+  - name: Update Terraform output
+    local_action:
+      module: shell
+      chdir: ../terraform
+      cmd: terraform output -json | jq "with_entries(.value = .value.value)" > ~/.tsipis/output.json
   - name: Update & Upgrade apt
     apt:
       autoclean: yes
@@ -10,9 +15,11 @@
     become: yes
     become_method: sudo
 
-- hosts: msf
+- hosts: metasploit
   roles:
-    - role: setup
+    - role: metasploit
+      vars:
+        postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
       tags:
         - msf
 
