@@ -5,3 +5,4 @@ packer_cache
 *.tfstate.backup
 packer_output
 terraform.tfvars
+inventory.ini

@@ -1,0 +1,18 @@
+---
+- hosts: all
+  tasks:
+  - name: Update & Upgrade apt
+    apt:
+      autoclean: yes
+      autoremove: yes
+      update_cache: yes
+      upgrade: yes
+    become: yes
+    become_method: sudo
+
+- hosts: msf
+  roles:
+    - role: setup
+      tags:
+        - msf
+

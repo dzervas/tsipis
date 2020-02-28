@@ -1,0 +1,13 @@
+[Unit]
+Description=Metasploit Web Service
+
+[Service]
+User=msf
+Group=msf
+WorkingDirectory=/opt/metasploit-framework/embedded/framework
+Environment=PATH=/opt/metasploit-framework/embedded/bin
+ExecStart=/opt/metasploit-framework/embedded/bin/thin --rackup msf-ws.ru --log /var/log/metasploit-web/metasploit-web.log --port 5443 --address 0.0.0.0 --environment production --debug --threaded start
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

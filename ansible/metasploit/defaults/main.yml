@@ -1,0 +1,8 @@
+---
+
+# Database configuration
+db_name: "metasploit"
+db_username: "metasploit"
+db_password: "changeme"
+db_host: "localhost"
+db_port: 5432

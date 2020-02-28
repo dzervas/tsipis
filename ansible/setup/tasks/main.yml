@@ -1,5 +1,0 @@
----
-
-- include: update.yml
-- include: metasploit.yml
-  tags: msf

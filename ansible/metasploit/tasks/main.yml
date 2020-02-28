@@ -1,0 +1,48 @@
+---
+# Took from https://github.com/leesoh/yams/blob/master/roles/metasploit/tasks/metasploit.yml
+
+- name: Download Metasploit installer
+  become: true
+  get_url:
+    url: https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb
+    dest: /tmp/msfinstall
+    mode: 0755
+
+- name: Install Metasploit
+  become: true
+  command: /tmp/msfinstall
+
+- name: Create Metasploit user
+  become: yes
+  user:
+    name: msf
+    group: msf
+    comment: Metasploit user by Ansible
+    create_home: true
+
+- name: Copy database config
+  become: true
+  template:
+    src: templates/database.yml
+    dest: /opt/metasploit-framework/embedded/framework/config/database.yml
+
+- name: Create log directory
+  become: true
+  file:
+    path: /var/log/metasploit-web
+    owner: msf
+    group: msf
+    mode: 755
+
+- name: Install SystemD service
+  become: true
+  copy:
+    src: templates/metasploit-web.service
+    dest: /etc/systemd/system/metasploit-web.service
+
+- name: Start Metasploit
+  become: true
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: metasploit-web
