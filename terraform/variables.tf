@@ -9,6 +9,9 @@ variable "config" {
 		# Google
 		google_region = "us-central1"
 		google_zone = "us-central1-c"
+
+		# Heroku
+		heroku_region = "us"
 	}
 }
 

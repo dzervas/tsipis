@@ -1,12 +1,12 @@
-resource "google_compute_instance" "msf" {
-	name = "msf"
+resource "google_compute_instance" "metasploit" {
+	name = "metasploit"
 	machine_type = "f1-micro"
 	allow_stopping_for_update = true
 
 	project = var.config.project
 	zone = var.config.google_zone
 
-	hostname = "msf.${var.config.domain}"
+	hostname = "metasploit.${var.config.domain}"
 
 	metadata = {
 		ssh-keys = join("\n", [for user, key in var.ssh_keys : "${user}:${key}"])
@@ -30,4 +30,14 @@ resource "google_compute_instance" "msf" {
 	shielded_instance_config {
 		enable_secure_boot = true
 	}
+}
+
+resource "heroku_app" "metasploit" {
+	name = var.config.project
+	region = var.config.heroku_region
+}
+
+resource "heroku_addon" "metasploit_db" {
+	app = heroku_app.metasploit.name
+	plan = "heroku-postgresql:hobby-dev"
 }

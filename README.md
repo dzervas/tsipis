@@ -23,6 +23,11 @@ Idea came from https://free-for.dev
 
 Pick a project name. Stick with it across all providers.
 
+- Heroku
+  - If you don't want to give full access to your heroku account, create a Team (needs Credit Card)
+  - Go to [Manage Account/Applications/Create authorization](https://dashboard.heroku.com/account/applications/authorizations/new), give it a friendly name and some expiry
+  - Write on `~/.tsipis/heroku.yml`: `email: "<your_email>"` and `api_key: "<api_key>"` (in 2 lines please)
+  - (Optional) Add a credit card to receive 450 more dynos from the basic 550 = total 1000
 - Google
   - Create a project
   - Create a [Service Account](https://console.cloud.google.com/apis/credentials/serviceaccountkey) "Project/Owner" and save to `~/.tsipis/google.json`
