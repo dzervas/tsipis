@@ -35,10 +35,54 @@ Pick a project name. Stick with it across all providers.
     - [Compute Engine API](https://console.developers.google.com/apis/api/compute.googleapis.com)
   - (Optional) Create a budget in Billing/Budgets & alerts
 
-## Using
+## Deploying
 
 I guess you have gathered all the credentials, as instructed above.
-You will need to install `terraform` (> 0.12).
+You will need to install `terraform` (> 0.12), `jq` and `ansible` (> 2.0).
+
+## Using
+
+This section describes how to use the various deployed services
+
+### Metasploit
+
+This guy (as you may now) is a bit tricky.
+First of all you need a working LOCAL database. That means a local postgres DB.
+If you're on Kali you're probably good. If you're not on Kali, install
+the postgresql server (find the package in your distro), start it, connect
+to it (maybe this will work as root: `su - postgres psql`) and execute
+the following:
+
+```pgsql
+create database msf;
+create user msf with password 'mypassword';
+grant all privileges on database msf to msf;
+```
+
+Now in your users home folder edit `~/.msf4/database.yml` to reflect the correct
+credentials (also the port that postgres is listening is probably 5432).
+
+After that, run `msfconsole`.
+
+`db_status` should return something like
+`[*] Connected to msf. Connection type: postgresql.`
+
+Perfect! :)
+
+TODO: How to find Metasploit instance ip/domain? Give url
+TODO: How to find admin credentials
+TODO: How to add more users?
+
+Now visit the Metasploit instace over http on port 5443 and path
+`/api/v1/auth/login`, log in with your credentials and generate/view your
+API token.
+
+Back to the `msfconsole`:
+
+`db_connect -t <api_token> --name tsipis http://<metasploit-host>:5443`
+
+From now on every time you fire up msfconsole you can just
+`db_connect tsipis` (or add it to your `~/.msf4/msfconsole.rc`)
 
 ## Building the images with packer
 
