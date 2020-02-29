@@ -16,6 +16,20 @@
 - name: Gather package facts
   package_facts:
 
+# This will run the next time after the first install as well, which is a bug
+# as the version might no change but .version is not written during the first
+# installation by msfinstall
+- name: Track Metasploit version for DB migration
+  become: yes
+  copy:
+    # Multiple package versions will break the migration tracking
+    content: "{{ ansible_facts.packages['metasploit-framework'][0].version }}"
+    dest: /opt/metasploit-framework/.version
+  when: "'metasploit-framework' in ansible_facts.packages"
+  notify:
+    - migrate db
+    - restart metasploit
+
 - name: Download Metasploit installer
   become: yes
   get_url:
@@ -29,37 +43,46 @@
   become: yes
   command: /tmp/msfinstall
   when: "'metasploit-framework' not in ansible_facts.packages"
+  notify:
+    - migrate db
+    - create web user
+    # TODO: Store API token to vault
+    - create api token
 
-- name: Create Metasploit user
+- name: Create system Metasploit user
   become: yes
   user:
     name: metasploit
     comment: Metasploit user by Ansible
-    create_home: true
+    create_home: yes
 
 - name: Copy database config
-  become: true
+  become: yes
   template:
     src: templates/database.yml
     dest: /opt/metasploit-framework/embedded/framework/config/database.yml
+  notify: restart metasploit
 
 - name: Create log directory
-  become: true
+  become: yes
   file:
     path: /var/log/metasploit-web
     owner: metasploit
     mode: 700
     state: directory
 
+# TODO: Use SSL
 - name: Install SystemD service
-  become: true
+  become: yes
   copy:
     src: templates/metasploit-web.service
     dest: /etc/systemd/system/metasploit-web.service
+  notify: restart metasploit
 
 - name: Start Metasploit
-  become: true
+  become: yes
   systemd:
-    state: restarted
+    state: started
     daemon_reload: yes
+    enabled: yes
     name: metasploit-web
