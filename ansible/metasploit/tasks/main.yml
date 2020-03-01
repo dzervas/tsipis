@@ -43,11 +43,8 @@
   become: yes
   command: /tmp/msfinstall
   when: "'metasploit-framework' not in ansible_facts.packages"
-  notify:
-    - migrate db
-    - create web user
-    # TODO: Store API token to vault
-    - create api token
+  notify: migrate db
+  register: msfinstall
 
 - name: Create system Metasploit user
   become: yes
@@ -86,3 +83,40 @@
     daemon_reload: yes
     enabled: yes
     name: metasploit-web
+
+- name: Wait Metasploit
+  when: msfinstall.changed
+  wait_for:
+    host: 127.0.0.1
+    port: 5443
+    state: drained
+    sleep: 5
+    timeout: 120
+    connect_timeout: 2
+
+- name: Create Metasploit Web user
+  when: msfinstall.changed
+  uri:
+    url: http://127.0.0.1:5443/api/v1/users
+    method: POST
+    # TODO: Use vault
+    body_format: json
+    body: >
+      {
+          "username": "admin",
+          "password": "admin",
+          "fullname": "Ansible Admin",
+          "admin": true
+      }
+
+- name: Create Metasploit Web API token
+  when: msfinstall.changed
+  uri:
+    url: http://127.0.0.1:5443/api/v1/auth/generate-token
+    method: POST
+    body_format: json
+    body: >
+      {
+          "username": "admin",
+          "password": "admin"
+      }

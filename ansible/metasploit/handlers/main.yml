@@ -12,28 +12,3 @@
     state: restarted
     daemon_reload: yes
     name: metasploit-web
-
-- name: create web user
-  uri:
-    url: http://127.0.0.1:5443/api/v1/users
-    method: POST
-    # TODO: Use vault
-    body_format: json
-    body: >
-      {
-          "username": "admin",
-          "password": "admin",
-          "fullname": "Ansible Admin",
-          "admin": true
-      }
-
-- name: create api token
-  uri:
-    url: http://127.0.0.1:5443/api/v1/auth/generate-token
-    method: POST
-    body_format: json
-    body: >
-      {
-          "username": "admin",
-          "password": "admin"
-      }
