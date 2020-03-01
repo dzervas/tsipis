@@ -1,0 +1,8 @@
+sources:
+  journald.toml:
+    units:
+      - metasploit-web
+
+sinks:
+  logzio.toml:
+    url: "https://listener.logz.io/?token=changeme&type=vector"

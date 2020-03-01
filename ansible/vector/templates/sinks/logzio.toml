@@ -1,0 +1,16 @@
+[sinks.logzio]
+  type = "http" # Don't change this setting
+  inputs = {{ config.sources | tojson }}
+  encoding = "ndjson"
+
+  uri = "{{ config.url }}"
+  compression = "gzip"
+
+  [sinks.logzio.batch]
+    max_size = 4096000
+    timeout_secs = 3
+
+  [sinks.logzio.buffer]
+    type = "memory"
+    when_full = "block"
+    max_events = 1000

@@ -1,0 +1,5 @@
+---
+
+- hosts: metasploit
+  roles:
+    - role: vector

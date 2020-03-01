@@ -1,0 +1,5 @@
+[sources.journald]
+  type = "journald"
+
+  current_boot_only = true
+  units = {{ config.units | tojson }}

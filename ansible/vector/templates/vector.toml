@@ -1,0 +1,8 @@
+{% import "templates/include_loop.j2" as include_loop %}
+
+# Set global options
+data_dir = "/var/lib/vector"
+
+{{ include_loop.input(sources, "templates/sources/") }}
+{% set sources_list = sources.keys() | map("regex_replace", "\.toml$", "") | list %}
+{{ include_loop.input(sinks, "templates/sinks/", { "sources": sources_list }) }}

@@ -1,4 +1,5 @@
 ---
+
 - hosts: all
   tasks:
   - name: Update Terraform output
@@ -20,6 +21,3 @@
     - role: metasploit
       vars:
         postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
-      tags:
-        - msf
-

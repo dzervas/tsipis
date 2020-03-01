@@ -68,7 +68,7 @@
   file:
     path: /var/log/metasploit-web
     owner: metasploit
-    mode: 700
+    mode: 1755
     state: directory
 
 # TODO: Use SSL
