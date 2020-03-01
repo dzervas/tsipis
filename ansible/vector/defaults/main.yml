@@ -5,4 +5,4 @@ sources:
 
 sinks:
   logzio.toml:
-    url: "https://listener.logz.io/?token=changeme&type=vector"
+    token: "changeme"

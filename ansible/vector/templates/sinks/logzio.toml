@@ -3,7 +3,7 @@
   inputs = {{ config.sources | tojson }}
   encoding = "ndjson"
 
-  uri = "{{ config.url }}"
+  uri = "https://listener.logz.io/?token={{ config.token }}&type=vector"
   compression = "gzip"
 
   [sinks.logzio.batch]

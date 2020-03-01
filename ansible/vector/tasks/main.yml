@@ -4,7 +4,6 @@
     url: https://packages.timber.io/vector/latest/vector-amd64.deb
     dest: /tmp/vector-amd64.deb
     mode: 755
-  when: false
 
 - name: Install Vector
   become: yes
@@ -13,7 +12,6 @@
     install_recommends: yes
   notify:
     - restart vector
-  when: false
 
 - name: Copy config
   become: yes
