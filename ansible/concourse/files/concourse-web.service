@@ -1,0 +1,12 @@
+[Unit]
+Description=Concourse Web
+
+[Service]
+User=nobody
+Group=nogroup
+EnvironmentFile=/etc/concourse-web.conf
+ExecStart=/opt/concourse/bin/concourse web
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

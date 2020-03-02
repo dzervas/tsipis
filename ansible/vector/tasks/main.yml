@@ -1,5 +1,4 @@
 - name: Download Vector deb
-  become: yes
   get_url:
     url: https://packages.timber.io/vector/latest/vector-amd64.deb
     dest: /tmp/vector-amd64.deb

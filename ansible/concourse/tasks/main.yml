@@ -1,0 +1,59 @@
+---
+
+- name: Install python pip
+  become: yes
+  package:
+    name: python3-pip
+    state: latest
+
+- name: Install github3 library
+  become: yes
+  pip:
+    name: github3.py
+    state: latest
+
+- name: Fetch latest release
+  register: latest_release
+  github_release:
+    user: concourse
+    repo: concourse
+    action: latest_release
+
+- name: Track version
+  become: yes
+  register: version
+  copy:
+    # Multiple package versions will break the migration tracking
+    content: "{{ latest_release.tag }}"
+    dest: /etc/.concourse-version
+
+- name: Download latest release
+  get_url:
+    # Tags are vX.X.X but filename is X.X.X
+    url: "https://github.com/concourse/concourse/releases/download/{{ latest_release.tag }}/concourse-{{ latest_release.tag[1:] }}-linux-amd64.tgz"
+    dest: /tmp/concourse-linux-amd64.tgz
+  when: version.changed
+
+- name: Extract release
+  become: yes
+  unarchive:
+    src: /tmp/concourse-linux-amd64.tgz
+    dest: /opt
+    remote_src: yes
+  when: version.changed
+
+# TODO: Generate keys
+
+- name: Setup Web service
+  import_tasks: systemd.yml
+  vars:
+    service: web
+  tags:
+    - web
+
+- name: Setup Worker service
+  import_tasks: systemd.yml
+  vars:
+    service: worker
+  tags:
+    - worker

@@ -1,0 +1,8 @@
+---
+
+- hosts: metasploit
+  roles:
+    - role: concourse
+      tags:
+        - web
+        - worker

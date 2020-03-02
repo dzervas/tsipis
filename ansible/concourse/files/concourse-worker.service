@@ -1,0 +1,12 @@
+[Unit]
+Description=Concourse Worker
+
+[Service]
+User=nobody
+Group=nogroup
+EnvironmentFile=/etc/concourse-worker.conf
+ExecStart=/opt/concourse/bin/concourse worker
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
