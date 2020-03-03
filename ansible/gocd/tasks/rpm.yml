@@ -1,6 +1,0 @@
----
-
-- name: Install RPM repository
-  get_url:
-    url: https://download.gocd.org/gocd.repo
-    dest: /etc/yum.repos.d/gocd.repo
