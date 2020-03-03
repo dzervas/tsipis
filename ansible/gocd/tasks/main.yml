@@ -1,0 +1,47 @@
+---
+
+- name: Install RPM repo
+  become: yes
+  get_url:
+    url: https://download.gocd.org/gocd.repo
+    dest: /etc/yum.repos.d/gocd.repo
+  when: ansible_distribution.lower() in [ "redhat", "centos" ]
+
+- name: Install yum package
+  become: yes
+  yum:
+    name: "go-{{ service }}"
+    state: latest
+    update_cache: yes
+  when: ansible_distribution.lower() in [ "redhat", "centos" ]
+  notify: restart service
+
+- name: Install APT repo
+  become: yes
+  copy:
+    dest: /etc/apt/sources.list.d/gocd.list
+    content: deb https://download.gocd.org /
+  when: ansible_distribution.lower() in [ "ubuntu", "debian" ]
+
+- name: Install APT key
+  become: yes
+  apt_key:
+    url: https://download.gocd.org/GOCD-GPG-KEY.asc
+    state: present
+  when: ansible_distribution.lower() in [ "ubuntu", "debian" ]
+
+- name: Install package
+  become: yes
+  apt:
+    name: "go-{{ service }}"
+    state: latest
+    update_cache: yes
+  when: ansible_distribution.lower() in [ "ubuntu", "debian" ]
+  notify: restart service
+
+- name: Start service
+  become: yes
+  service:
+    name: "go-{{ service }}"
+    state: started
+    enabled: yes
