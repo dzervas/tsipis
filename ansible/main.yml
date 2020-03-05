@@ -1,6 +1,8 @@
 ---
 
 - hosts: all
+  pre_tasks:
+    - include_vars: ~/.tsipis/variables.yml
   tasks:
   - name: Update Terraform output
     local_action:
@@ -28,3 +30,12 @@
       tags:
         - web
         - worker
+    - role: vector
+      vars:
+        sources:
+          journald.toml:
+            units:
+              - metasploit-web
+        sinks:
+          logzio.toml:
+            token: "{{ logzio_token }}"
