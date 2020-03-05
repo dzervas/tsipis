@@ -21,3 +21,10 @@
     - role: metasploit
       vars:
         postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
+    - role: concourse
+      vars:
+        postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
+        url: "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+      tags:
+        - web
+        - worker

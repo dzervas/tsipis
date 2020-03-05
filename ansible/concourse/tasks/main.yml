@@ -1,5 +1,17 @@
 ---
 
+- name: Parse Postgres URL
+  local_action:
+    module: command
+    cmd: "python {{ role_path }}/files/pgurl2json.py"
+    stdin: "{{ postgres_url }}"
+  register: postgres_url_json
+
+- name: Parse Postgres JSON data
+  set_fact:
+    database: "{{ postgres_url_json.stdout | from_json }}"
+    cachable: no
+
 - name: Install python pip
   become: yes
   package:
