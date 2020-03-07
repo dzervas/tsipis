@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  become: yes
+  tasks:
+  - name: Stop useless services
+    systemd:
+      name: "{{ item }}"
+      state: stopped
+      enabled: no
+    with_items:
+    - rsyslog
+    - snapd
+    - sshguard
+
+  - name: Uninstall useless packages
+    package:
+      name: "{{ item }}"
+      state: absent
+    with_items:
+    - rsyslog
+    - snapd
+    - sshguard
