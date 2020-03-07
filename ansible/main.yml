@@ -2,7 +2,7 @@
 
 - hosts: all
   pre_tasks:
-    - include_vars: ~/.tsipis/variables.yml
+    - include_vars: ~/.tsipis/vault.yml
   tasks:
   - name: Update Terraform output
     local_action:
@@ -30,6 +30,9 @@
       tags:
         - web
         - worker
+    - role: faraday
+      vars:
+        postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
     - role: vector
       vars:
         sources:

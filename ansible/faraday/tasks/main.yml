@@ -1,0 +1,64 @@
+---
+
+- name: Install python pip
+  become: yes
+  package:
+    name: python3-pip
+    state: latest
+
+- name: Install github3 library
+  become: yes
+  pip:
+    name: github3.py
+    state: latest
+
+- name: Fetch latest release
+  register: latest_release
+  github_release:
+    user: infobyte
+    repo: faraday
+    action: latest_release
+
+- name: Track version
+  become: yes
+  register: version
+  copy:
+    # Multiple package versions will break the migration tracking
+    content: "{{ latest_release.tag }}"
+    dest: /etc/.faraday-version
+
+- name: Install latest deb
+  become: yes
+  apt:
+    deb: "https://github.com/infobyte/faraday/releases/download/{{ latest_release.tag }}/faraday-server_amd64.deb"
+  when: version.changed and ansible_distribution.lower() in [ "ubuntu", "debian" ]
+  notify:
+    - migrate database
+    - restart service
+
+- name: Install latest rpm
+  become: yes
+  yum:
+    name: "https://github.com/infobyte/faraday/releases/download/{{ latest_release.tag }}/faraday-server_amd64.rpm"
+    state: present
+  when: version.changed and ansible_distribution.lower() in [ "redhat", "centos" ]
+  notify:
+    - migrate database
+    - restart service
+
+- name: Copy config
+  become: yes
+  become_user: faraday
+  template:
+    src: templates/server.ini
+    dest: /home/faraday/.faraday/config/server.ini
+  notify:
+    - restart service
+    - create user
+
+- name: Start service
+  become: yes
+  systemd:
+    name: faraday-server
+    state: started
+    enabled: yes

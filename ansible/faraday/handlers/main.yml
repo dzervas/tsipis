@@ -1,0 +1,15 @@
+---
+
+- name: migrate database
+  become: yes
+  shell: faraday-manage create-tables && faraday-manage migrate
+
+- name: restart service
+  become: yes
+  systemd:
+    name: faraday-server
+    state: restarted
+
+- name: create user
+  become: yes
+  shell: faraday-manage create-superuser --username admin --password admin --email admin@admin

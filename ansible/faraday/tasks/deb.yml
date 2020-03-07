@@ -1,0 +1,4 @@
+- name: Download latest deb
+  get_url:
+    url: "{{ url }}"
+    dest: /tmp/faraday-server_amd64.deb
