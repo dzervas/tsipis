@@ -1,16 +1,19 @@
 locals {
-	heroku_file = file("~/.tsipis/heroku.yml")
-	heroku = yamldecode(local.heroku_file)
+	google_project = jsondecode(data.pass_password.google.full).project_id
+}
+
+provider "pass" {
+	refresh_store = true
 }
 
 provider "google" {
-	credentials = file("~/.tsipis/google.json")
-	project = var.config.project
+	credentials = data.pass_password.google.full
+	project = local.google_project
 	region = var.config.google_region
 	zone = var.config.google_zone
 }
 
 provider "heroku" {
-	email = local.heroku.email
-	api_key = local.heroku.api_key
+	api_key = data.pass_password.heroku.password
+	email = data.pass_password.heroku.data.email
 }

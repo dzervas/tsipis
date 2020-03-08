@@ -38,11 +38,24 @@ Pick a project name. Stick with it across all providers.
 ## Deploying
 
 I guess you have gathered all the credentials, as instructed above.
-You will need to install `terraform` (> 0.12), `jq` and `ansible` (> 2.0).
+You will need to install `terraform` (> 0.12), `jq`, `gopass` and `ansible` (> 2.0).
+
+The terraform plugin for [gopass integration](https://github.com/camptocamp/terraform-provider-pass) is also required.
 
 ## Using
 
 This section describes how to use the various deployed services
+
+First of all, create the two gopass mounts: `tsipis-pass` and `tsipis-admin-pass`.
+`tsipis-pass` contains service passwords (mostly admin), which cannot create
+new cloud instances, thus can't charge you more (take care though).
+
+`tsipis-cloud-admin` gives full access to the cloud providers with terraform.
+Be VERY careful with those!
+
+If you want to give very limited access, I guess good luck, this isn't a
+production environment of a big corp! I'll try though to create a process
+for such cases at some point...
 
 ### Metasploit
 
