@@ -64,12 +64,12 @@ Meta services:
 
 This section describes how to set up the various services.
 
-First of all, create the two gopass mounts: `tsipis-pass` and `tsipis-admin-pass`.
-`tsipis-pass` contains service passwords (mostly admin), which cannot create
-new cloud instances, thus can't charge you more (take care though).
+Account API tokens and account-specific secrets are stored
+in `ansible/vault.yml`. This is a very sensitive file and can be used
+to overcharge the cloud accounts. DON'T lose it and probably DON'T share it.
+You can store the vault password in gopass, as described below.
 
-`tsipis-cloud-admin` gives full access to the cloud providers with terraform.
-Be VERY careful with those!
+Admin credentials for each service are held in gopass - set it up.
 
 If you want to give very limited access, I guess good luck, this isn't a
 production environment of a big corp! I'll try though to create a process
@@ -78,6 +78,7 @@ for such cases at some point...
 ### Metasploit
 
 This guy (as you may now) is a bit tricky.
+
 First of all you need a working LOCAL database. That means a local postgres DB.
 If you're on Kali you're probably good. If you're not on Kali, install
 the postgresql server (find the package in your distro), start it, connect
@@ -133,3 +134,28 @@ terraform plan -out /tmp/tfplan
 # If you're happy
 terraform apply /tmp/tfplan
 ```
+
+## Using gopass with ansible-vault
+
+Create the following files in the root directory (they are git ignored):
+
+`ansible.cfg`
+```ini
+[defaults]
+vault_identity_list = ansible@vault.sh
+```
+
+`vault.sh`
+```shell script
+#!/bin/sh
+# Of course any other command that spits the password will work
+gopass show "my/vault/password/path"
+```
+
+Now to copy the default `vault.example.yml`:
+
+```shell script
+ansible-vault encrypt --output vault.yml vault.example.yml
+```
+
+Edit it with `ansible-vault edit vault.yml`

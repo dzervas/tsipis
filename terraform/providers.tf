@@ -1,19 +1,24 @@
 locals {
-	google_project = jsondecode(data.pass_password.google.full).project_id
+	cloud_admin = yamldecode(data.pass_password.cloud_admin.full)
+	google_project = jsondecode(local.cloud_admin.google_credentials).project_id
 }
 
 provider "pass" {
-	refresh_store = true
+//	refresh_store = true
 }
 
-provider "google" {
-	credentials = data.pass_password.google.full
-	project = local.google_project
-	region = var.config.google_region
-	zone = var.config.google_zone
+data "pass_password" "cloud_admin" {
+	path = "${var.pass_cloud_admin_path}"
 }
 
 provider "heroku" {
-	api_key = data.pass_password.heroku.password
-	email = data.pass_password.heroku.data.email
+	api_key = local.cloud_admin.heroku_api_key
+	email = local.cloud_admin.heroku_email
+}
+
+provider "google" {
+	credentials = local.cloud_admin.google_credentials
+	project = local.google_project
+	region = var.google_region
+	zone = var.google_zone
 }
