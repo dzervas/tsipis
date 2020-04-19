@@ -1,0 +1,9 @@
+---
+
+logzio_token: myLogZSecretToken
+
+heroku_api_key: myHerokuSecretToken
+heroku_email: myHeroku@email.com
+
+google_credentials: >
+  MyJsonGoogleCredentials

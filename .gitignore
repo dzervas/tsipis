@@ -8,3 +8,4 @@ terraform.tfvars
 inventory.ini
 ansible.cfg
 vault.sh
+vault.yml
