@@ -1,8 +1,0 @@
-sources:
-  journald.toml:
-    units:
-      - metasploit-web
-
-sinks:
-  logzio.toml:
-    token: "changeme"

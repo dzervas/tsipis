@@ -1,6 +1,0 @@
-- name: restart vector
-  become: yes
-  systemd:
-    state: restarted
-    daemon_reload: yes
-    name: vector

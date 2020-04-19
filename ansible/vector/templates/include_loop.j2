@@ -1,9 +1,0 @@
-{% macro input(include_dict, include_path, additional={}) %}
-{% for file, args in include_dict.items() %}
-{% set config = args %}
-{% set _tmp = config.update(additional) %}
-
-{% include include_path + file %}
-
-{% endfor %}
-{% endmacro %}

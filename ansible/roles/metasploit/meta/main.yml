@@ -1,0 +1,20 @@
+---
+
+galaxy_info:
+  role_name: metasploit
+  author: Dimitris Zervas <dzervas@dzervas.gr>
+  description: Metasploit-Web service for MSF in multiplayer
+  license: MIT
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - pentesting
+    - penetration-testing
+    - metasploit
+    - metasploit-web
+  min_ansible_version: 2.9

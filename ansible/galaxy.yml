@@ -1,0 +1,16 @@
+---
+
+namespace: dzervas
+name: tsipis
+readme: ../README.md
+authors:
+  - Dimitris Zervas <dzervas@dzervas.gr>
+description: Penetration testing cloud infrastructure for free
+license_file: ../LICENSE
+tags:
+  - pentesting
+  - penetration-testing
+  - terraform
+repository: https://github.com/dzervas/tsipis
+documentation: https://github.com/dzervas/tsipis
+issues: https://github.com/dzervas/tsipis/issues

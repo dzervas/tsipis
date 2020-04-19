@@ -1,38 +1,40 @@
 ---
 
 - hosts: all
-  pre_tasks:
-    - include_vars: ~/.tsipis/vault.yml
+  include_vars: ~/.tsipis/vault.yml
   tasks:
-  - name: Update Terraform output
-    local_action:
-      module: shell
-      chdir: ../terraform
-      cmd: terraform output -json | jq "with_entries(.value = .value.value)" > ~/.tsipis/output.json
-  - name: Update & Upgrade apt
-    apt:
-      autoclean: yes
-      autoremove: yes
-      update_cache: yes
-      upgrade: yes
-    become: yes
-    become_method: sudo
+    - name: Update Terraform output
+      local_action:
+        module: shell
+        chdir: ../terraform
+        cmd: terraform output -json
+      register: terraform
+    - name: Set Terraform fact
+      set_fact:
+        terraform: "{{ terraform.content | from_json }}"
+    - name: Update & Upgrade apt
+      apt:
+        autoclean: yes
+        autoremove: yes
+        update_cache: yes
+        upgrade: yes
+      become: yes
 
-- hosts: metasploit
+- hosts: google
   roles:
     - role: metasploit
       vars:
-        postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
+        postgres_url: "{{ terraform.get('metasploit_db') }}"
     - role: concourse
       vars:
-        postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
+        postgres_url: "{{ terraform.get('metasploit_db') }}"
         url: "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
       tags:
         - web
         - worker
     - role: faraday
       vars:
-        postgres_url: "{{( lookup('file','~/.tsipis/output.json') | from_json).get('metasploit_db') }}"
+        postgres_url: "{{ terraform.get('metasploit_db') }}"
     - role: vector
       vars:
         sources:

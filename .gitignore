@@ -6,3 +6,5 @@ packer_cache
 packer_output
 terraform.tfvars
 inventory.ini
+ansible.cfg
+vault.sh

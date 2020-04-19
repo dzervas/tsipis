@@ -1,0 +1,20 @@
+---
+
+galaxy_info:
+  role_name: faraday
+  author: Dimitris Zervas <dzervas@dzervas.gr>
+  description: Faraday IDE deployment
+  license: MIT
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+  galaxy_tags:
+    - pentesting
+    - penetration-testing
+    - faraday
+    - faraday-ide
+  min_ansible_version: 2.9
