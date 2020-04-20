@@ -23,18 +23,26 @@ Idea came from https://free-for.dev
 
 Pick a project name. Stick with it across all providers.
 
+Create a gopass secret to store all cloud-admin secrets. It's gonna be a YAML
+file, so write it in the form "<name>: <value>". For multiline use
+"<name>: ><newline><my 2 space indented lines>"
+
 - Heroku
   - If you don't want to give full access to your heroku account,
   create a Team (needs Credit Card)
   - Go to [Manage Account/Applications/Create authorization](https://dashboard.heroku.com/account/applications/authorizations/new), give it a friendly name and some expiry
-  - Write on `~/.tsipis/heroku.yml`: `email: "<your_email>"` and `api_key: "<api_key>"`
+  - Write in cloud-admin `heroku_email` and `api_key` with the correct values
   - (Optional) Add a credit card to receive 450 more dynos from the basic 550
 - Google Cloud
   - Create a project
-  - Create a [Service Account](https://console.cloud.google.com/apis/credentials/serviceaccountkey) "Project/Owner" and save to `~/.tsipis/google.json`
+  - Create a [Service Account](https://console.cloud.google.com/apis/credentials/serviceaccountkey) "Project/Owner" and save it as a multiline string named `google_credentials`
   - Go to [API Library](https://console.developers.google.com/apis/dashboard) and enable:
     - [Compute Engine API](https://console.developers.google.com/apis/api/compute.googleapis.com)
   - (Optional) Create a budget in Billing/Budgets & alerts (0 is ok)
+- Okteto
+  - Login with a GitHub account
+  - Download Credentials (sidebar)
+  - Store it as a multiline string with name `okteto_config` (and add a newline between each root element!)
 
 ## Deploying
 
