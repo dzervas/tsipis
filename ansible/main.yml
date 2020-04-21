@@ -21,6 +21,7 @@
       become: yes
 
 - hosts: google
+  become: yes
   roles:
     - role: metasploit
       vars:
@@ -35,12 +36,3 @@
     - role: faraday
       vars:
         postgres_url: "{{ terraform.get('metasploit_db') }}"
-    - role: vector
-      vars:
-        sources:
-          journald.toml:
-            units:
-              - metasploit-web
-        sinks:
-          logzio.toml:
-            token: "{{ logzio_token }}"

@@ -1,16 +1,22 @@
 ---
 
 - name: Install python pip
-  become: yes
   package:
     name: python3-pip
-    state: latest
+    state: present
+  when: not inside_container
+
+- name: Install python apt
+  pip:
+    name: apt
+  when: inside_container
 
 - name: Install github3 library
-  become: yes
   pip:
-    name: github3.py
-    state: latest
+    name:
+      - setuptools
+      - github3.py
+    state: present
 
 - name: Fetch latest release
   register: latest_release
@@ -20,7 +26,6 @@
     action: latest_release
 
 - name: Track version
-  become: yes
   register: version
   copy:
     # Multiple package versions will break the migration tracking
@@ -28,7 +33,6 @@
     dest: /etc/.faraday-version
 
 - name: Install latest deb
-  become: yes
   apt:
     deb: "https://github.com/infobyte/faraday/releases/download/{{ latest_release.tag }}/faraday-server_amd64.deb"
   when: version.changed and ansible_distribution.lower() in [ "ubuntu", "debian" ]
@@ -37,7 +41,6 @@
     - restart service
 
 - name: Install latest rpm
-  become: yes
   yum:
     name: "https://github.com/infobyte/faraday/releases/download/{{ latest_release.tag }}/faraday-server_amd64.rpm"
     state: present
@@ -57,8 +60,8 @@
     - create user
 
 - name: Start service
-  become: yes
   systemd:
     name: faraday-server
     state: started
     enabled: yes
+  when: not inside_container

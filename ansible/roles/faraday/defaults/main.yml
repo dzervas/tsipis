@@ -1,3 +1,4 @@
 ---
 
 postgres_url: "postgresql+psycopg2://faraday_postgresql:SECRET_PASSWORD@REMOTE_IP/faraday"
+inside_container: no # Should always be no
