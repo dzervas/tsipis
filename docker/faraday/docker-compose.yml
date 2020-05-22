@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+    faraday:
+        build: .
+        depends_on:
+          - couchdb
+        ports:
+          - 5985:5985
+
+    couchdb:
+        image: couchdb:1
+        volumes:
+          - ./couchdb.ini:/usr/local/etc/couchdb/local.d/admins.ini

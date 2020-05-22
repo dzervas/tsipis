@@ -60,7 +60,7 @@ Provided services:
 - [Pupy](https://github.com/n1nj4sec/pupy)
 - [Koadic](https://github.com/zerosum0x0/koadic)
 - [Faraday IDE](https://github.com/infobyte/faraday)
-- [KingPhisher](https://github.com/rsmusllp/king-phisher)
+- [GoPhish](https://github.com/gophish/gophish)
 
 Meta services:
 - Logging & monitoring on logz.io
